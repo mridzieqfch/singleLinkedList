@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualisasi Linked List (HTML & JS)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom scrollbar for better aesthetics in the visualizer */
+      .visualizer-scrollbar::-webkit-scrollbar {
+        height: 8px;
+      }
+      .visualizer-scrollbar::-webkit-scrollbar-track {
+        background: #1f2937; /* bg-gray-800 */
+        border-radius: 10px;
+      }
+      .visualizer-scrollbar::-webkit-scrollbar-thumb {
+        background: #374151; /* bg-gray-700 */
+        border-radius: 10px;
+      }
+      .visualizer-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #4b5563; /* bg-gray-600 */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gray-800 p-4 shadow-md text-center sticky top-0 z-20">
+      <h1 class="text-2xl font-bold text-cyan-400">Visualisasi Linked List</h1>
+      <div class="text-sm text-gray-400 mt-1">
+        <span>Jumlah Node: <span id="node-count">0</span></span>
+        <span class="mx-2">|</span>
+        <span>Head: <span id="head-name">null</span></span>
+        <span class="mx-2">|</span>
+        <span>Tail: <span id="tail-name">null</span></span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 flex flex-col overflow-hidden">
+      <p
+        id="message-bar"
+        class="text-center text-yellow-400 h-6 mb-4 transition-opacity duration-300"
+      ></p>
+
+      <!-- Visualizer Area -->
+      <div
+        id="visualizer"
+        class="flex-grow w-full flex items-center overflow-x-auto p-4 bg-black bg-opacity-20 rounded-lg visualizer-scrollbar"
+      >
+        <!-- Nodes will be dynamically inserted here by JavaScript -->
+      </div>
+    </main>
+
+    <!-- Control Button -->
+    <footer class="p-4 sticky bottom-0 z-20">
+      <button
+        id="control-button"
+        class="w-full max-w-md mx-auto flex items-center justify-center space-x-2 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed disabled:scale-100"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span>Kontrol / Aksi</span>
+      </button>
+    </footer>
+
+    <!-- Action Modal (Bottom Sheet) -->
+    <div
+      id="modal-backdrop"
+      class="fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300 opacity-0 pointer-events-none"
+    ></div>
+    <div
+      id="modal-sheet"
+      class="fixed bottom-0 left-0 right-0 bg-gray-800 rounded-t-2xl shadow-2xl p-6 z-40 transform transition-transform duration-300 ease-out translate-y-full"
+    >
+      <h2 class="text-xl font-bold text-center mb-4 text-cyan-400">
+        Pilih Aksi
+      </h2>
+
+      <!-- Action Form: Changed div to form -->
+      <form id="action-form-container" class="hidden mb-4 space-y-3">
+        <div id="form-fields">
+          <!-- Form inputs will be dynamically inserted here -->
+        </div>
+        <div class="flex space-x-2 pt-2">
+          <button
+            id="submit-action-button"
+            type="submit"
+            class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors"
+          >
+            Jalankan Aksi
+          </button>
+          <button
+            id="cancel-action-button"
+            type="button"
+            class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 rounded-lg transition-colors"
+          >
+            Batal
+          </button>
+        </div>
+      </form>
+
+      <!-- Action Buttons Grid -->
+      <div
+        id="action-buttons-grid"
+        class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm"
+      >
+        <!-- Add Buttons -->
+        <button
+          data-action="addFirst"
+          class="bg-gray-700 hover:bg-cyan-500 p-3 rounded-lg transition-colors"
+        >
+          Tambah Awal
+        </button>
+        <button
+          data-action="addLast"
+          class="bg-gray-700 hover:bg-cyan-500 p-3 rounded-lg transition-colors"
+        >
+          Tambah Akhir
+        </button>
+        <button
+          data-action="addMiddle"
+          class="bg-gray-700 hover:bg-cyan-500 p-3 rounded-lg transition-colors"
+        >
+          Tambah Tengah
+        </button>
+        <!-- Edit Buttons -->
+        <button
+          data-action="editFirst"
+          class="bg-gray-700 hover:bg-orange-500 p-3 rounded-lg transition-colors"
+        >
+          Ubah Awal
+        </button>
+        <button
+          data-action="editLast"
+          class="bg-gray-700 hover:bg-orange-500 p-3 rounded-lg transition-colors"
+        >
+          Ubah Akhir
+        </button>
+        <button
+          data-action="editMiddle"
+          class="bg-gray-700 hover:bg-orange-500 p-3 rounded-lg transition-colors"
+        >
+          Ubah Tengah
+        </button>
+        <!-- Delete Buttons -->
+        <button
+          data-action="deleteFirst"
+          class="bg-gray-700 hover:bg-red-500 p-3 rounded-lg transition-colors"
+        >
+          Hapus Awal
+        </button>
+        <button
+          data-action="deleteLast"
+          class="bg-gray-700 hover:bg-red-500 p-3 rounded-lg transition-colors"
+        >
+          Hapus Akhir
+        </button>
+        <button
+          data-action="deleteMiddle"
+          class="bg-gray-700 hover:bg-red-500 p-3 rounded-lg transition-colors"
+        >
+          Hapus Tengah
+        </button>
+        <!-- Reset Button -->
+        <button
+          data-action="resetData"
+          class="bg-gray-600 hover:bg-yellow-600 p-3 rounded-lg text-bold transition-colors col-span-1 sm:col-span-3"
+        >
+          Reset (Hapus Semua)
+        </button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // === State Management ===
+        let nodes = [];
+        let isAnimating = false;
+        let currentAction = null;
+
+        // === DOM Elements ===
+        const visualizer = document.getElementById("visualizer");
+        const messageBar = document.getElementById("message-bar");
+        const nodeCountEl = document.getElementById("node-count");
+        const headNameEl = document.getElementById("head-name");
+        const tailNameEl = document.getElementById("tail-name");
+        const controlButton = document.getElementById("control-button");
+        const modalBackdrop = document.getElementById("modal-backdrop");
+        const modalSheet = document.getElementById("modal-sheet");
+        const actionFormContainer = document.getElementById(
+          "action-form-container"
+        );
+        const actionButtonsGrid = document.getElementById(
+          "action-buttons-grid"
+        );
+        const cancelActionButton = document.getElementById(
+          "cancel-action-button"
+        );
+        const formFields = document.getElementById("form-fields");
+
+        // === Helper Functions ===
+        const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+        const showMessage = (msg, duration = 3000) => {
+          messageBar.textContent = msg;
+          if (duration > 0) {
+            setTimeout(() => {
+              if (messageBar.textContent === msg) {
+                messageBar.textContent = "";
+              }
+            }, duration);
+          }
+        };
+
+        // === Render Function ===
+        // This function redraws the entire linked list based on the current state
+        const render = () => {
+          // Clear previous render
+          visualizer.innerHTML = "";
+
+          // Update header info
+          const head = nodes.length > 0 ? nodes[0] : null;
+          const tail = nodes.length > 0 ? nodes[nodes.length - 1] : null;
+          nodeCountEl.textContent = nodes.length;
+          headNameEl.textContent = head ? head.nama : "null";
+          tailNameEl.textContent = tail ? tail.nama : "null";
+
+          if (nodes.length === 0) {
+            visualizer.innerHTML = `
+                        <div class="text-center w-full text-gray-500">
+                            <p>Linked List kosong.</p>
+                            <p>Gunakan tombol "Kontrol" untuk menambahkan node baru.</p>
+                        </div>`;
+            return;
+          }
+
+          const listContainer = document.createElement("div");
+          listContainer.className = "flex items-center space-x-8 px-4 h-48";
+
+          nodes.forEach((node, index) => {
+            const isHead = index === 0;
+            const isTail = index === nodes.length - 1;
+
+            // Node container
+            const nodeWrapper = document.createElement("div");
+            nodeWrapper.className = "flex flex-col items-center";
+            nodeWrapper.id = `node-${node.id}`;
+
+            // Labels (Head, Tail, etc.)
+            const labelsContainer = document.createElement("div");
+            labelsContainer.className =
+              "flex text-xs text-center mb-2 space-x-2 h-6";
+            if (isHead)
+              labelsContainer.innerHTML += `<span class="bg-green-500 text-white px-2 py-1 rounded-full">Head</span>`;
+            if (isTail)
+              labelsContainer.innerHTML += `<span class="bg-pink-500 text-white px-2 py-1 rounded-full">Tail</span>`;
+
+            // Node visual element
+            const nodeElement = document.createElement("div");
+            nodeElement.className =
+              "w-40 h-24 rounded-lg flex shadow-lg bg-gray-700 transition-all duration-500 ease-in-out transform";
+            nodeElement.innerHTML = `
+                        <div class="w-2/3 p-2 flex flex-col justify-center text-left">
+                            <p class="font-bold truncate">${node.nama}</p>
+                            <p class="text-xs text-gray-300">NIM: ${node.nim}</p>
+                            <p class="text-xs text-gray-300 truncate">Jur: ${node.jurusan}</p>
+                        </div>
+                        <div class="w-1/3 bg-gray-800 rounded-r-lg border-l-2 border-gray-600 flex items-center justify-center">
+                            <div class="w-3 h-3 bg-cyan-400 rounded-full"></div>
+                        </div>
+                    `;
+
+            nodeWrapper.appendChild(labelsContainer);
+            nodeWrapper.appendChild(nodeElement);
+            listContainer.appendChild(nodeWrapper);
+
+            // Pointer arrow
+            if (index < nodes.length - 1) {
+              const arrow = document.createElement("div");
+              arrow.className = "text-cyan-400 text-4xl font-light";
+              arrow.textContent = "→";
+              listContainer.appendChild(arrow);
+            }
+          });
+          visualizer.appendChild(listContainer);
+        };
+
+        // === Animation Helpers ===
+        const highlightNode = (id, type) => {
+          const nodeEl = document.querySelector(`#node-${id} > div:last-child`);
+          const labelContainer = document.querySelector(
+            `#node-${id} > div:first-child`
+          );
+          if (!nodeEl) return;
+
+          // Reset all other highlights
+          document.querySelectorAll(".visualizer-highlight").forEach((el) => {
+            el.classList.remove(
+              "visualizer-highlight",
+              "scale-110",
+              "bg-yellow-500",
+              "shadow-lg",
+              "shadow-yellow-500/50",
+              "bg-blue-500",
+              "shadow-blue-500/50",
+              "bg-red-600",
+              "shadow-red-600/50",
+              "opacity-80",
+              "bg-orange-500",
+              "shadow-orange-500/50"
+            );
+            el.classList.add("bg-gray-700");
+          });
+          document.querySelectorAll(".anim-label").forEach((el) => el.remove());
+
+          let colorClass = "";
+          let shadowClass = "";
+          let labelText = "";
+          let labelColor = "";
+
+          switch (type) {
+            case "traversing":
+              colorClass = "bg-yellow-500";
+              shadowClass = "shadow-yellow-500/50";
+              break;
+            case "before":
+              colorClass = "bg-blue-500";
+              shadowClass = "shadow-blue-500/50";
+              labelText = "Before";
+              labelColor = "bg-blue-500";
+              break;
+            case "del":
+              colorClass = "bg-red-600 opacity-80";
+              shadowClass = "shadow-red-600/50";
+              labelText = "Del";
+              labelColor = "bg-red-500";
+              break;
+            case "editing":
+              colorClass = "bg-orange-500";
+              shadowClass = "shadow-orange-500/50";
+              labelText = "Editing";
+              labelColor = "bg-orange-500";
+              break;
+          }
+
+          nodeEl.classList.add(
+            "visualizer-highlight",
+            "scale-110",
+            colorClass,
+            "shadow-lg",
+            shadowClass
+          );
+          nodeEl.classList.remove("bg-gray-700");
+
+          if (labelText) {
+            const label = document.createElement("span");
+            label.className = `anim-label text-white px-2 py-1 rounded-full ${labelColor}`;
+            label.textContent = labelText;
+            labelContainer.appendChild(label);
+          }
+        };
+
+        const resetHighlights = () => {
+          document.querySelectorAll(".visualizer-highlight").forEach((el) => {
+            el.classList.remove(
+              "visualizer-highlight",
+              "scale-110",
+              "bg-yellow-500",
+              "shadow-lg",
+              "shadow-yellow-500/50",
+              "bg-blue-500",
+              "shadow-blue-500/50",
+              "bg-red-600",
+              "shadow-red-600/50",
+              "opacity-80",
+              "bg-orange-500",
+              "shadow-orange-500/50"
+            );
+            el.classList.add("bg-gray-700");
+          });
+          document.querySelectorAll(".anim-label").forEach((el) => el.remove());
+        };
+
+        // === Modal Logic ===
+        const openModal = () => {
+          modalBackdrop.classList.remove("opacity-0", "pointer-events-none");
+          modalSheet.classList.remove("translate-y-full");
+        };
+
+        const closeModal = () => {
+          modalBackdrop.classList.add("opacity-0", "pointer-events-none");
+          modalSheet.classList.add("translate-y-full");
+          // Reset view after closing
+          setTimeout(() => {
+            actionFormContainer.classList.add("hidden");
+            actionButtonsGrid.classList.remove("hidden");
+            currentAction = null;
+          }, 300); // Wait for transition
+        };
+
+        const showFormForAction = (action) => {
+          currentAction = action;
+          const needsData = action.includes("add") || action.includes("edit");
+          const needsPosition = action.includes("Middle");
+
+          formFields.innerHTML = ""; // Clear previous fields
+
+          if (needsData) {
+            formFields.innerHTML += `
+                        <input type="text" name="nama" placeholder="Nama Mahasiswa" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                        <input type="text" name="nim" placeholder="NIM" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                        <input type="text" name="jurusan" placeholder="Jurusan" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    `;
+          }
+          if (needsPosition) {
+            formFields.innerHTML += `<input type="number" name="posisi" placeholder="Posisi (e.g., 2)" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />`;
+          }
+
+          actionButtonsGrid.classList.add("hidden");
+          actionFormContainer.classList.remove("hidden");
+        };
+
+        // === Initial Load / Reset Function ===
+        const initialize = () => {
+          nodes = [
+            { id: 1, nama: "Budi", nim: "101", jurusan: "Informatika" },
+            { id: 2, nama: "Ani", nim: "102", jurusan: "Sistem Info" },
+            { id: 3, nama: "Cakra", nim: "103", jurusan: "DKV" },
+            { id: 4, nama: "Dewi", nim: "104", jurusan: "Informatika" },
+          ];
+          showMessage("Linked List berhasil dibuat dengan data awal.");
+          render();
+        };
+
+        // === Event Listeners ===
+        controlButton.addEventListener("click", openModal);
+        modalBackdrop.addEventListener("click", closeModal);
+        cancelActionButton.addEventListener("click", closeModal);
+
+        actionButtonsGrid.addEventListener("click", (e) => {
+          if (e.target.tagName === "BUTTON") {
+            const action = e.target.dataset.action;
+            if (action === "resetData") {
+              // Handle reset by clearing all nodes
+              closeModal();
+              nodes = []; // Set nodes to an empty array
+              render(); // Re-render the empty state
+              showMessage("Semua data berhasil dihapus.");
+            } else {
+              showFormForAction(action);
+            }
+          }
+        });
+
+        // Changed to listen for 'submit' on the form
+        actionFormContainer.addEventListener("submit", async (e) => {
+          e.preventDefault(); // Prevent page reload
+          if (isAnimating) return;
+
+          // The line that caused the error was removed. We get data directly.
+          const nama =
+            actionFormContainer.querySelector('[name="nama"]')?.value || "";
+          const nim =
+            actionFormContainer.querySelector('[name="nim"]')?.value || "";
+          const jurusan =
+            actionFormContainer.querySelector('[name="jurusan"]')?.value || "";
+          const pos = parseInt(
+            actionFormContainer.querySelector('[name="posisi"]')?.value
+          );
+
+          closeModal();
+          isAnimating = true;
+          controlButton.disabled = true;
+
+          // --- ADD ---
+          if (currentAction === "addFirst") {
+            const newNode = { id: Date.now(), nama, nim, jurusan };
+            nodes.unshift(newNode);
+            showMessage(`Data ${nama} berhasil ditambahkan di awal.`);
+          }
+          if (currentAction === "addLast") {
+            const newNode = { id: Date.now(), nama, nim, jurusan };
+            nodes.push(newNode);
+            showMessage(`Data ${nama} berhasil ditambahkan di akhir.`);
+          }
+          if (currentAction === "addMiddle") {
+            if (isNaN(pos) || pos <= 1 || pos > nodes.length) {
+              showMessage("Error: Posisi tidak valid.");
+            } else {
+              const newNode = { id: Date.now(), nama, nim, jurusan };
+              nodes.splice(pos - 1, 0, newNode);
+              showMessage(`Data ${nama} ditambahkan di posisi ${pos}.`);
+            }
+          }
+          // --- DELETE ---
+          if (currentAction === "deleteFirst") {
+            if (nodes.length > 0) {
+              const deleted = nodes.shift();
+              showMessage(`Data ${deleted.nama} dihapus dari awal.`);
+            } else {
+              showMessage("Error: List kosong.");
+            }
+          }
+          if (currentAction === "deleteLast") {
+            if (nodes.length > 0) {
+              const deleted = nodes.pop();
+              showMessage(`Data ${deleted.nama} dihapus dari akhir.`);
+            } else {
+              showMessage("Error: List kosong.");
+            }
+          }
+          if (currentAction === "deleteMiddle") {
+            if (isNaN(pos) || pos <= 1 || pos >= nodes.length) {
+              showMessage("Error: Posisi tidak valid.");
+            } else {
+              showMessage(`Mulai proses hapus posisi ${pos}...`, 0);
+              let beforeNodeId;
+              for (let i = 0; i < pos - 1; i++) {
+                highlightNode(nodes[i].id, "traversing");
+                await delay(600);
+                if (i === pos - 2) beforeNodeId = nodes[i].id;
+              }
+              const deleteNodeId = nodes[pos - 1].id;
+              highlightNode(beforeNodeId, "before");
+              highlightNode(deleteNodeId, "del");
+              showMessage(`Node 'before' dan 'del' ditemukan.`);
+              await delay(2000);
+              const deleted = nodes.splice(pos - 1, 1);
+              showMessage(`Data ${deleted[0].nama} berhasil dihapus.`);
+            }
+          }
+          // --- EDIT ---
+          if (currentAction === "editFirst") {
+            if (nodes.length > 0) {
+              nodes[0] = { ...nodes[0], nama, nim, jurusan };
+              showMessage(`Data head diubah menjadi ${nama}.`);
+            } else {
+              showMessage("Error: List kosong.");
+            }
+          }
+          if (currentAction === "editLast") {
+            if (nodes.length > 0) {
+              nodes[nodes.length - 1] = {
+                ...nodes[nodes.length - 1],
+                nama,
+                nim,
+                jurusan,
+              };
+              showMessage(`Data tail diubah menjadi ${nama}.`);
+            } else {
+              showMessage("Error: List kosong.");
+            }
+          }
+          if (currentAction === "editMiddle") {
+            if (isNaN(pos) || pos <= 1 || pos >= nodes.length) {
+              showMessage("Error: Posisi tidak valid.");
+            } else {
+              showMessage(`Mencari node di posisi ${pos}...`, 0);
+              for (let i = 0; i < pos; i++) {
+                highlightNode(nodes[i].id, "traversing");
+                await delay(600);
+              }
+              const editNodeId = nodes[pos - 1].id;
+              highlightNode(editNodeId, "editing");
+              showMessage(`Node ditemukan. Mengubah data...`);
+              await delay(1500);
+              nodes[pos - 1] = { ...nodes[pos - 1], nama, nim, jurusan };
+              showMessage(`Data di posisi ${pos} diubah menjadi ${nama}.`);
+            }
+          }
+
+          await delay(500);
+          resetHighlights();
+          render();
+          visualizer.scrollLeft = visualizer.scrollWidth;
+          isAnimating = false;
+          controlButton.disabled = false;
+        });
+
+        initialize();
+      });
+    </script>
+  </body>
+</html>
