@@ -177,7 +177,7 @@
         <!-- Reset Button -->
         <button
           data-action="resetData"
-          class="bg-gray-600 hover:bg-yellow-600 p-3 rounded-lg text-bold transition-colors col-span-1 sm:col-span-3"
+          class="bg-gray-600 hover:bg-yellow-600 p-3 rounded-lg transition-colors col-span-2 sm:col-span-3"
         >
           Reset (Hapus Semua)
         </button>
@@ -430,6 +430,14 @@
 
           actionButtonsGrid.classList.add("hidden");
           actionFormContainer.classList.remove("hidden");
+
+          // *** FIX: Automatically focus the first input field ***
+          setTimeout(() => {
+            const firstInput = formFields.querySelector("input");
+            if (firstInput) {
+              firstInput.focus();
+            }
+          }, 350); // Delay to allow modal transition to finish
         };
 
         // === Initial Load / Reset Function ===
