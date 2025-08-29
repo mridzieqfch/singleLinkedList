@@ -3,32 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Visualisasi Linked List (HTML & JS)</title>
+    <title>Visualisasi Single Linked List</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Custom scrollbar for better aesthetics in the visualizer */
+      /* Custom scrollbar for better aesthetics */
       .visualizer-scrollbar::-webkit-scrollbar {
         height: 8px;
       }
       .visualizer-scrollbar::-webkit-scrollbar-track {
-        background: #1f2937; /* bg-gray-800 */
+        background: rgba(0, 0, 0, 0.05);
         border-radius: 10px;
       }
       .visualizer-scrollbar::-webkit-scrollbar-thumb {
-        background: #374151; /* bg-gray-700 */
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 10px;
       }
       .visualizer-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #4b5563; /* bg-gray-600 */
+        background: rgba(0, 0, 0, 0.3);
       }
     </style>
   </head>
-  <body class="bg-gray-900 text-white font-sans flex flex-col min-h-screen">
+  <body
+    class="bg-gradient-to-br from-sky-100 to-teal-100 text-gray-800 font-sans flex flex-col min-h-screen"
+  >
     <!-- Header -->
-    <header class="bg-gray-800 p-4 shadow-md text-center sticky top-0 z-20">
-      <h1 class="text-2xl font-bold text-cyan-400">Visualisasi Linked List</h1>
-      <div class="text-sm text-gray-400 mt-1">
+    <header
+      class="bg-white/70 backdrop-blur-sm p-4 shadow-md text-center sticky top-0 z-20"
+    >
+      <h1 class="text-2xl font-bold text-teal-600">
+        Visualisasi Single Linked List
+      </h1>
+      <div class="text-sm text-gray-600 mt-1">
         <span>Jumlah Node: <span id="node-count">0</span></span>
         <span class="mx-2">|</span>
         <span>Head: <span id="head-name">null</span></span>
@@ -41,13 +47,13 @@
     <main class="flex-grow p-4 flex flex-col overflow-hidden">
       <p
         id="message-bar"
-        class="text-center text-yellow-400 h-6 mb-4 transition-opacity duration-300"
+        class="text-center text-sky-700 h-6 mb-4 transition-opacity duration-300 font-semibold"
       ></p>
 
       <!-- Visualizer Area -->
       <div
         id="visualizer"
-        class="flex-grow w-full flex items-center overflow-x-auto p-4 bg-black bg-opacity-20 rounded-lg visualizer-scrollbar"
+        class="flex-grow w-full flex items-center overflow-x-auto p-4 bg-black/5 rounded-lg visualizer-scrollbar"
       >
         <!-- Nodes will be dynamically inserted here by JavaScript -->
       </div>
@@ -57,13 +63,13 @@
     <footer class="p-4 sticky bottom-0 z-20">
       <button
         id="control-button"
-        class="w-full max-w-md mx-auto flex items-center justify-center space-x-2 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed disabled:scale-100"
+        class="w-full max-w-md mx-auto flex items-center justify-center space-x-2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
-          viewBox="0 0 24"
+          viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
@@ -83,13 +89,12 @@
     ></div>
     <div
       id="modal-sheet"
-      class="fixed bottom-0 left-0 right-0 bg-gray-800 rounded-t-2xl shadow-2xl p-6 z-40 transform transition-transform duration-300 ease-out translate-y-full"
+      class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl p-6 z-40 transform transition-transform duration-300 ease-out translate-y-full"
     >
-      <h2 class="text-xl font-bold text-center mb-4 text-cyan-400">
+      <h2 class="text-xl font-bold text-center mb-4 text-teal-600">
         Pilih Aksi
       </h2>
 
-      <!-- Action Form: Changed div to form -->
       <form id="action-form-container" class="hidden mb-4 space-y-3">
         <div id="form-fields">
           <!-- Form inputs will be dynamically inserted here -->
@@ -105,79 +110,74 @@
           <button
             id="cancel-action-button"
             type="button"
-            class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 rounded-lg transition-colors"
+            class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors"
           >
             Batal
           </button>
         </div>
       </form>
 
-      <!-- Action Buttons Grid -->
       <div
         id="action-buttons-grid"
         class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm"
       >
-        <!-- Add Buttons -->
         <button
           data-action="addFirst"
-          class="bg-gray-700 hover:bg-cyan-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-teal-100 p-3 rounded-lg transition-colors"
         >
           Tambah Awal
         </button>
         <button
           data-action="addLast"
-          class="bg-gray-700 hover:bg-cyan-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-teal-100 p-3 rounded-lg transition-colors"
         >
           Tambah Akhir
         </button>
         <button
           data-action="addMiddle"
-          class="bg-gray-700 hover:bg-cyan-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-teal-100 p-3 rounded-lg transition-colors"
         >
           Tambah Tengah
         </button>
-        <!-- Edit Buttons -->
         <button
           data-action="editFirst"
-          class="bg-gray-700 hover:bg-orange-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-sky-200 p-3 rounded-lg transition-colors"
         >
           Ubah Awal
         </button>
         <button
           data-action="editLast"
-          class="bg-gray-700 hover:bg-orange-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-sky-200 p-3 rounded-lg transition-colors"
         >
           Ubah Akhir
         </button>
         <button
           data-action="editMiddle"
-          class="bg-gray-700 hover:bg-orange-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-sky-200 p-3 rounded-lg transition-colors"
         >
           Ubah Tengah
         </button>
-        <!-- Delete Buttons -->
         <button
           data-action="deleteFirst"
-          class="bg-gray-700 hover:bg-red-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-red-200 p-3 rounded-lg transition-colors"
         >
           Hapus Awal
         </button>
         <button
           data-action="deleteLast"
-          class="bg-gray-700 hover:bg-red-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-red-200 p-3 rounded-lg transition-colors"
         >
           Hapus Akhir
         </button>
         <button
           data-action="deleteMiddle"
-          class="bg-gray-700 hover:bg-red-500 p-3 rounded-lg transition-colors"
+          class="bg-gray-100 hover:bg-red-200 p-3 rounded-lg transition-colors"
         >
           Hapus Tengah
         </button>
-        <!-- Reset Button -->
         <button
           data-action="resetData"
-          class="bg-gray-600 hover:bg-yellow-600 p-3 rounded-lg transition-colors col-span-1 sm:col-span-3"
+          class="bg-gray-200 hover:bg-sky-300 p-3 rounded-lg transition-colors col-span-1 md:col-span-3"
         >
           Reset (Hapus Semua)
         </button>
@@ -225,12 +225,8 @@
         };
 
         // === Render Function ===
-        // This function redraws the entire linked list based on the current state
         const render = () => {
-          // Clear previous render
           visualizer.innerHTML = "";
-
-          // Update header info
           const head = nodes.length > 0 ? nodes[0] : null;
           const tail = nodes.length > 0 ? nodes[nodes.length - 1] : null;
           nodeCountEl.textContent = nodes.length;
@@ -253,12 +249,10 @@
             const isHead = index === 0;
             const isTail = index === nodes.length - 1;
 
-            // Node container
             const nodeWrapper = document.createElement("div");
             nodeWrapper.className = "flex flex-col items-center";
             nodeWrapper.id = `node-${node.id}`;
 
-            // Labels (Head, Tail, etc.)
             const labelsContainer = document.createElement("div");
             labelsContainer.className =
               "flex text-xs text-center mb-2 space-x-2 h-6";
@@ -267,18 +261,17 @@
             if (isTail)
               labelsContainer.innerHTML += `<span class="bg-pink-500 text-white px-2 py-1 rounded-full">Tail</span>`;
 
-            // Node visual element
             const nodeElement = document.createElement("div");
             nodeElement.className =
-              "w-40 h-24 rounded-lg flex shadow-lg bg-gray-700 transition-all duration-500 ease-in-out transform";
+              "w-40 h-24 rounded-lg flex shadow-lg bg-white transition-all duration-500 ease-in-out transform";
             nodeElement.innerHTML = `
                         <div class="w-2/3 p-2 flex flex-col justify-center text-left">
                             <p class="font-bold truncate">${node.nama}</p>
-                            <p class="text-xs text-gray-300">NIM: ${node.nim}</p>
-                            <p class="text-xs text-gray-300 truncate">Jur: ${node.jurusan}</p>
+                            <p class="text-xs text-gray-500">NIM: ${node.nim}</p>
+                            <p class="text-xs text-gray-500 truncate">Jur: ${node.jurusan}</p>
                         </div>
-                        <div class="w-1/3 bg-gray-800 rounded-r-lg border-l-2 border-gray-600 flex items-center justify-center">
-                            <div class="w-3 h-3 bg-cyan-400 rounded-full"></div>
+                        <div class="w-1/3 bg-gray-100 rounded-r-lg border-l-2 border-gray-200 flex items-center justify-center">
+                            <div class="w-3 h-3 bg-teal-400 rounded-full"></div>
                         </div>
                     `;
 
@@ -286,10 +279,9 @@
             nodeWrapper.appendChild(nodeElement);
             listContainer.appendChild(nodeWrapper);
 
-            // Pointer arrow
             if (index < nodes.length - 1) {
               const arrow = document.createElement("div");
-              arrow.className = "text-cyan-400 text-4xl font-light";
+              arrow.className = "text-teal-500 text-4xl font-light";
               arrow.textContent = "→";
               listContainer.appendChild(arrow);
             }
@@ -305,23 +297,20 @@
           );
           if (!nodeEl) return;
 
-          // Reset all other highlights
           document.querySelectorAll(".visualizer-highlight").forEach((el) => {
             el.classList.remove(
               "visualizer-highlight",
               "scale-110",
-              "bg-yellow-500",
+              "bg-sky-300",
               "shadow-lg",
-              "shadow-yellow-500/50",
-              "bg-blue-500",
-              "shadow-blue-500/50",
-              "bg-red-600",
-              "shadow-red-600/50",
+              "shadow-sky-400/50",
+              "bg-blue-300",
+              "shadow-blue-400/50",
+              "bg-red-300",
               "opacity-80",
-              "bg-orange-500",
-              "shadow-orange-500/50"
+              "bg-orange-300"
             );
-            el.classList.add("bg-gray-700");
+            el.classList.add("bg-white");
           });
           document.querySelectorAll(".anim-label").forEach((el) => el.remove());
 
@@ -332,24 +321,24 @@
 
           switch (type) {
             case "traversing":
-              colorClass = "bg-yellow-500";
-              shadowClass = "shadow-yellow-500/50";
+              colorClass = "bg-sky-300";
+              shadowClass = "shadow-sky-400/50";
               break;
             case "before":
-              colorClass = "bg-blue-500";
-              shadowClass = "shadow-blue-500/50";
+              colorClass = "bg-blue-300";
+              shadowClass = "shadow-blue-400/50";
               labelText = "Before";
               labelColor = "bg-blue-500";
               break;
             case "del":
-              colorClass = "bg-red-600 opacity-80";
-              shadowClass = "shadow-red-600/50";
+              colorClass = "bg-red-300 opacity-80";
+              shadowClass = "shadow-red-400/50";
               labelText = "Del";
               labelColor = "bg-red-500";
               break;
             case "editing":
-              colorClass = "bg-orange-500";
-              shadowClass = "shadow-orange-500/50";
+              colorClass = "bg-orange-300";
+              shadowClass = "shadow-orange-400/50";
               labelText = "Editing";
               labelColor = "bg-orange-500";
               break;
@@ -362,7 +351,7 @@
             "shadow-lg",
             shadowClass
           );
-          nodeEl.classList.remove("bg-gray-700");
+          nodeEl.classList.remove("bg-white");
 
           if (labelText) {
             const label = document.createElement("span");
@@ -377,18 +366,16 @@
             el.classList.remove(
               "visualizer-highlight",
               "scale-110",
-              "bg-yellow-500",
+              "bg-sky-300",
               "shadow-lg",
-              "shadow-yellow-500/50",
-              "bg-blue-500",
-              "shadow-blue-500/50",
-              "bg-red-600",
-              "shadow-red-600/50",
+              "shadow-sky-400/50",
+              "bg-blue-300",
+              "shadow-blue-400/50",
+              "bg-red-300",
               "opacity-80",
-              "bg-orange-500",
-              "shadow-orange-500/50"
+              "bg-orange-300"
             );
-            el.classList.add("bg-gray-700");
+            el.classList.add("bg-white");
           });
           document.querySelectorAll(".anim-label").forEach((el) => el.remove());
         };
@@ -402,12 +389,11 @@
         const closeModal = () => {
           modalBackdrop.classList.add("opacity-0", "pointer-events-none");
           modalSheet.classList.add("translate-y-full");
-          // Reset view after closing
           setTimeout(() => {
             actionFormContainer.classList.add("hidden");
             actionButtonsGrid.classList.remove("hidden");
             currentAction = null;
-          }, 300); // Wait for transition
+          }, 300);
         };
 
         const showFormForAction = (action) => {
@@ -415,38 +401,36 @@
           const needsData = action.includes("add") || action.includes("edit");
           const needsPosition = action.includes("Middle");
 
-          formFields.innerHTML = ""; // Clear previous fields
+          formFields.innerHTML = "";
+
+          const inputClasses =
+            "w-full bg-gray-100 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500";
 
           if (needsData) {
-            formFields.innerHTML += `
-                        <input type="text" name="nama" placeholder="Nama Mahasiswa" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 my-1" />
-                        <input type="text" name="nim" placeholder="NIM" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 my-1" />
-                        <input type="text" name="jurusan" placeholder="Jurusan" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 my-1" />
-                    `;
+            formFields.innerHTML += `<input type="text" name="nama" placeholder="Nama Mahasiswa" class="${inputClasses}" />`;
+            formFields.innerHTML += `<input type="text" name="nim" placeholder="NIM" class="${inputClasses} mt-3" />`;
+            formFields.innerHTML += `<input type="text" name="jurusan" placeholder="Jurusan" class="${inputClasses} mt-3" />`;
           }
           if (needsPosition) {
-            formFields.innerHTML += `<input type="number" name="posisi" placeholder="Posisi (e.g., 2)" class="w-full bg-gray-700 p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />`;
+            formFields.innerHTML += `<input type="number" name="posisi" placeholder="Posisi (e.g., 2)" class="${inputClasses} mt-3" />`;
           }
 
           actionButtonsGrid.classList.add("hidden");
           actionFormContainer.classList.remove("hidden");
 
-          // *** FIX: Automatically focus the first input field ***
           setTimeout(() => {
             const firstInput = formFields.querySelector("input");
-            if (firstInput) {
-              firstInput.focus();
-            }
-          }, 350); // Delay to allow modal transition to finish
+            if (firstInput) firstInput.focus();
+          }, 350);
         };
 
         // === Initial Load / Reset Function ===
         const initialize = () => {
           nodes = [
-            { id: 1, nama: "Budi", nim: "101", jurusan: "Informatika" },
-            { id: 2, nama: "Ani", nim: "102", jurusan: "Sistem Info" },
-            { id: 3, nama: "Cakra", nim: "103", jurusan: "DKV" },
-            { id: 4, nama: "Dewi", nim: "104", jurusan: "Informatika" },
+            { id: 1, nama: "Ari", nim: "101", jurusan: "Informatika" },
+            { id: 2, nama: "Nadhil", nim: "102", jurusan: "Sistem Info" },
+            { id: 3, nama: "Tasya", nim: "103", jurusan: "DKV" },
+            { id: 4, nama: "Zahratul", nim: "104", jurusan: "Informatika" },
           ];
           showMessage("Linked List berhasil dibuat dengan data awal.");
           render();
@@ -461,10 +445,9 @@
           if (e.target.tagName === "BUTTON") {
             const action = e.target.dataset.action;
             if (action === "resetData") {
-              // Handle reset by clearing all nodes
               closeModal();
-              nodes = []; // Set nodes to an empty array
-              render(); // Re-render the empty state
+              nodes = [];
+              render();
               showMessage("Semua data berhasil dihapus.");
             } else {
               showFormForAction(action);
@@ -472,12 +455,10 @@
           }
         });
 
-        // Changed to listen for 'submit' on the form
         actionFormContainer.addEventListener("submit", async (e) => {
-          e.preventDefault(); // Prevent page reload
+          e.preventDefault();
           if (isAnimating) return;
 
-          // The line that caused the error was removed. We get data directly.
           const nama =
             actionFormContainer.querySelector('[name="nama"]')?.value || "";
           const nim =
@@ -492,18 +473,16 @@
           isAnimating = true;
           controlButton.disabled = true;
 
-          // --- ADD ---
+          // --- LOGIC FOR ALL ACTIONS ---
           if (currentAction === "addFirst") {
             const newNode = { id: Date.now(), nama, nim, jurusan };
             nodes.unshift(newNode);
             showMessage(`Data ${nama} berhasil ditambahkan di awal.`);
-          }
-          if (currentAction === "addLast") {
+          } else if (currentAction === "addLast") {
             const newNode = { id: Date.now(), nama, nim, jurusan };
             nodes.push(newNode);
             showMessage(`Data ${nama} berhasil ditambahkan di akhir.`);
-          }
-          if (currentAction === "addMiddle") {
+          } else if (currentAction === "addMiddle") {
             if (isNaN(pos) || pos <= 1 || pos > nodes.length) {
               showMessage("Error: Posisi tidak valid.");
             } else {
@@ -511,25 +490,21 @@
               nodes.splice(pos - 1, 0, newNode);
               showMessage(`Data ${nama} ditambahkan di posisi ${pos}.`);
             }
-          }
-          // --- DELETE ---
-          if (currentAction === "deleteFirst") {
+          } else if (currentAction === "deleteFirst") {
             if (nodes.length > 0) {
               const deleted = nodes.shift();
               showMessage(`Data ${deleted.nama} dihapus dari awal.`);
             } else {
               showMessage("Error: List kosong.");
             }
-          }
-          if (currentAction === "deleteLast") {
+          } else if (currentAction === "deleteLast") {
             if (nodes.length > 0) {
               const deleted = nodes.pop();
               showMessage(`Data ${deleted.nama} dihapus dari akhir.`);
             } else {
               showMessage("Error: List kosong.");
             }
-          }
-          if (currentAction === "deleteMiddle") {
+          } else if (currentAction === "deleteMiddle") {
             if (isNaN(pos) || pos <= 1 || pos >= nodes.length) {
               showMessage("Error: Posisi tidak valid.");
             } else {
@@ -548,17 +523,14 @@
               const deleted = nodes.splice(pos - 1, 1);
               showMessage(`Data ${deleted[0].nama} berhasil dihapus.`);
             }
-          }
-          // --- EDIT ---
-          if (currentAction === "editFirst") {
+          } else if (currentAction === "editFirst") {
             if (nodes.length > 0) {
               nodes[0] = { ...nodes[0], nama, nim, jurusan };
               showMessage(`Data head diubah menjadi ${nama}.`);
             } else {
               showMessage("Error: List kosong.");
             }
-          }
-          if (currentAction === "editLast") {
+          } else if (currentAction === "editLast") {
             if (nodes.length > 0) {
               nodes[nodes.length - 1] = {
                 ...nodes[nodes.length - 1],
@@ -570,8 +542,7 @@
             } else {
               showMessage("Error: List kosong.");
             }
-          }
-          if (currentAction === "editMiddle") {
+          } else if (currentAction === "editMiddle") {
             if (isNaN(pos) || pos <= 1 || pos >= nodes.length) {
               showMessage("Error: Posisi tidak valid.");
             } else {
@@ -597,6 +568,7 @@
           controlButton.disabled = false;
         });
 
+        // === Final Initialization ===
         initialize();
       });
     </script>
